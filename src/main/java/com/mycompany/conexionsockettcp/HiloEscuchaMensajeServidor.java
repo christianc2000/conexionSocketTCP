@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +37,11 @@ public class HiloEscuchaMensajeServidor extends Thread {
                 System.out.println(mensajeServidor); // Mostrar mensajes del servidor en la consola
             }
 
+        } catch (SocketException e) {//ERROR CUANDO EL SOCKET SE CIERRA INESPERADAMENTE
+            // Capturar la excepción SocketException
+            System.err.println("Se ha perdido la conexión con el servidor: " + e.getMessage());
+            // Acciones específicas para manejar la desconexión, como cerrar la conexión o reconectar
+            // ...
         } catch (IOException e) {
             if (e.getMessage().equals("Socket closed")) {
                 // El socket ya ha sido cerrado previamente, no es necesario tomar ninguna acción

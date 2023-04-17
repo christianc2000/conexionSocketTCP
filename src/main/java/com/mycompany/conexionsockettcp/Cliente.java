@@ -59,7 +59,7 @@ public class Cliente {
                 if ("salir".equalsIgnoreCase(mensajeCliente)) {
                     break; // Salir del ciclo si el usuario ingresa 'salir'
                 }
-                System.out.println(mensaje+mensajeCliente);
+                System.out.println(mensaje + mensajeCliente);
                 salida.println(this.id + "," + mensajeCliente); // Enviar mensajes del usuario (cliente) al servidor
                 // System.out.println("Yo:");
 
@@ -68,6 +68,11 @@ public class Cliente {
             // Cerrar la conexión con el servidor
             salida.close();
             socket.close();
+        } catch (SocketException e) {
+            // Capturar la excepción SocketException
+            System.err.println("Se ha perdido la conexión con el servidor: " + e.getMessage());
+            // Acciones específicas para manejar la desconexión, como cerrar la conexión o reconectar
+            // ...
         } catch (IOException e) {
             if (e.getMessage().equals("Socket closed")) {
                 System.out.println("socket cerrado");
