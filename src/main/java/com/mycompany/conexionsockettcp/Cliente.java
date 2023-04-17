@@ -53,6 +53,8 @@ public class Cliente {
 
             String mensajeCliente;
             System.out.println("Escriba 'salir' para abandonar la conversación");
+            System.out.println("Escriba un Nuevo mensaje");
+            System.out.println("**********************************************");
             //   System.out.println("Yo:");
             String mensaje = "Yo: ";
             while ((mensajeCliente = teclado.readLine()) != null) {

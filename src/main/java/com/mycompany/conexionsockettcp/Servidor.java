@@ -68,12 +68,24 @@ public class Servidor implements InterfaceSocketListener {
 //********agregar cliente a la lista hashmap
             String[] parte = key.split(",");//El cliente manda el ID,Nombre, separar en un vector
             salida.println("Servidor: Conexión exitosa");
-            System.out.println("se conectó el cliente con id: " + parte[0] + " y nombre: " + parte[1]);
+            System.out.println("se CONECTÓ el cliente con id: " + parte[0] + " y nombre: " + parte[1]);
             agregarCliente(parte[0], parte[1], socket);//ID,Nombre, Socket
+            System.out.println("******************************************************");
+            if (Clientes.size() == 0) {
+                System.out.println("¡NINGÚN CLIENTE ESTÁ CONECTADO!");
+            } else {
+                System.out.println("TIENES " + Clientes.size() + "CLIENTES CONECTADOS");
+            }
+//]*******Avisar que se unio un nuevo cliente
+            EnviarMensajes("Se unió " + parte[1] + " a la conversación", parte[0]);//se unió un nuevo cliente
 //********Inicializar Hilo mensaje
             HiloMensaje hm = new HiloMensaje(socket);//En donde vamos a leer lo que el cliente nos envía, también vamos a enviar una salida al Cliente
             hm.addMyEventListener(this);
             hm.start();
+        } catch (SocketException e) {
+            // Manejo de la excepción SocketException
+            System.out.println("Se ha cerrado la conexión del cliente de manera abrupta.");
+            // Puedes cerrar los recursos y finalizar el hilo de manera adecuada aquí
         } catch (IOException ex) {
             Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -85,27 +97,27 @@ public class Servidor implements InterfaceSocketListener {
      * @param evento
      */
     @Override
-    public void ClienteDesconectado(EventDesconexion evento){
-       
-        Map<String, Object> cliente =Clientes.remove(evento.getKey());
-        String mensaje=(String) cliente.get("nombre")+" abandono la conversación";
+    public void ClienteDesconectado(EventDesconexion evento) {
+
+        Map<String, Object> cliente = Clientes.remove(evento.getKey());
+        String mensaje = (String) cliente.get("nombre") + " abandono la conversación";
         EnviarMensajes(mensaje, evento.getKey());
-        System.out.println("cliente "+evento.getKey()+"."+cliente.get("nombre")+" está desconectado");
+        System.out.println("Se DESCONECTÓ el cliente con id: " + evento.getKey() + " y nombre" + cliente.get("nombre"));
         System.out.println("**************************************************************************");
-        if(Clientes.size()==0){
+        if (Clientes.size() == 0) {
             System.out.println("¡NINGÚN CLIENTE ESTÁ CONECTADO!");
-        }else{
-         System.out.println("TIENES "+Clientes.size()+" CONECTADOS");   
+        } else {
+            System.out.println("TIENES " + Clientes.size() + " CONECTADOS");
         }
-        
+
     }
-    
+
     public void leerMensaje(EventMensaje evento) {
         String parte[] = evento.getMensaje().split(",");
         Map<String, Object> cliente = Clientes.get(parte[0]);
         System.out.println("mensaje nuevo de <" + parte[0] + ", " + cliente.get("nombre") + "> : " + parte[1]);
-        String mensaje=(String) cliente.get("nombre")+": "+parte[1];
-      //  System.out.println("mensaje: "+mensaje);
+        String mensaje = (String) cliente.get("nombre") + ": " + parte[1];
+        //  System.out.println("mensaje: "+mensaje);
         EnviarMensajes(mensaje, parte[0]);
     }
 
@@ -113,7 +125,7 @@ public class Servidor implements InterfaceSocketListener {
         for (Map.Entry<String, Map<String, Object>> entry : Clientes.entrySet()) {
             String key = entry.getKey(); // Obtener la clave del mapa exterior
             if (key.equals(clienteId) != true) {
-                System.out.println(entry);
+                // System.out.println(entry);
                 Map<String, Object> valor = entry.getValue();
                 Socket socket = (Socket) valor.get("socket");
                 try {

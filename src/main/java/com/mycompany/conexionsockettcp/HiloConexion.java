@@ -31,9 +31,13 @@ public class HiloConexion extends Thread {
             try {
                 // Aceptar conexiones de clientes
                 socket = serverSocket.accept();
-                EventConexion evento = new EventConexion(socket,this);
+                EventConexion evento = new EventConexion(socket, this);
                 this.fireMyEvent(evento);
                 //System.out.println("Después del evento en HiloConexion");
+            } catch (SocketException e) {
+                // Manejo de la excepción SocketException
+                System.out.println("Se ha cerrado la conexión del cliente de manera abrupta.");
+                // Puedes cerrar los recursos y finalizar el hilo de manera adecuada aquí
             } catch (IOException e) {
                 System.err.println("Servidor: Error en la conexión con el cliente: " + e.getMessage());
             }

@@ -48,6 +48,10 @@ public class HiloMensaje extends Thread {
             // Cierra los flujos y el socket cuando se termina la comunicación con el cliente
             entrada.close();
             socket.close();
+        } catch (SocketException e) {
+            // Manejo de la excepción SocketException
+            System.out.println("Se ha cerrado la conexión del cliente de manera abrupta.");
+            // Puedes cerrar los recursos y finalizar el hilo de manera adecuada aquí
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
